@@ -61,9 +61,28 @@ methods:{
 async getapply(){
     const {data}=await this.$axios.get('/getapply',{params:{type:this.admin.role}})
     this.liverlist=data.apply
-}
+},
 
+async agree(scope){
+    const {data}=await this.$axios.get('/addlive',{params:{uid:scope.uid,name:scope.name,type:scope.type}})
+    if(data.code===200){
+      await this.$axios.get('/delapply',{params:{uid:scope.uid}})
+      this.$message.success('操作成功')
+      await this.getapply()
+    }
+    else{
+      this.$message.error('操作失败')
+    }
 
+},
+
+async reject(scope){
+    const {data}= await this.$axios.get('/delapply',{params:{uid:scope.uid}})   
+    if(data.code===200) {
+      this.$message.success('操作成功')
+      await this.getapply()
+    }
+} 
 }
 }
 </script>
